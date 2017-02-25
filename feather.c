@@ -91,12 +91,12 @@ feather *ft_init(size_t count, __attribute__ ((unused)) ft_func *funcs) {
 
 void ft_yieldd(struct feather *f, size_t ownId) {
     printf("Switching from %u to %u\n", ownId, (ownId + 1) % f->thread_count);
-    ft_yield(f, ownId);
+    ft_yield(f);
 }
 
 void ft_run(feather *f, int16_t *exitcodes) {
     // Yield from the main thread, includes context saving.
-    ft_yield(f, 0);
+    ft_yield(f);
 
     if (exitcodes) {
         // Thread 0 is main thread
@@ -117,7 +117,7 @@ void ft_destroy(feather *f) {
 
 __attribute__((noreturn)) void ft_exit(feather *f, size_t ownId, int16_t exitcode) {
     f->threads[ownId].exited = (exitcode << 16) | 0x1;
-    ft_yield(f, ownId);
+    ft_yield(f);
     // To make GCC happy about noreturn attribute, won't be called anyway as ft_yield performs a context switch
     exit(EXIT_SUCCESS);
 }

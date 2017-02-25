@@ -72,7 +72,7 @@ void ft_debug(feather *f);
 /**
   * Give up one's CPU time and dispatch another thread.
   */
-extern void ft_yield(struct feather*, size_t ownId);
+extern void ft_yield(struct feather* feather);
 /**
   * The same as ft_yield except that before switching threads debug information is printed to stdout.
   */

@@ -29,13 +29,13 @@ ft_return_cleanup: # feather and ownId are still on stack as provided by ft_init
     # Continue to ft_yield
     pushl $0xDEADBEEF # fake return address so ft_yield gets the correct stack layout
 
-ft_yield: # extern void ft_yield(struct feather *feather, size_t ownId);
+ft_yield: # extern void ft_yield(struct feather *feather);
     # Assumption: sizeof(size_t) = 4
 
     # eax, ecx, edx caller-save
     movl 4(%esp), %edx
     movl 8(%edx), %eax # now feather_thread pointer in eax
-    movl 8(%esp), %ecx # load ownId
+    movl 4(%edx), %ecx # load ownId
     # STUCTURE DEPENDENT: faster than imul $FEATHER_THREAD_SIZE, %ecx
     shll $5, %ecx
     lea (%eax, %ecx,), %eax # eax := feather_thread* of current (the yielding one) thread
@@ -50,7 +50,8 @@ ft_yield: # extern void ft_yield(struct feather *feather, size_t ownId);
     movl %ebp, 20(%eax)  # into feather_thread structure
 
     # Determine next thread
-    movl 8(%esp), %ecx  # load ownId, ecx = current thread index to be examined
+    # STUCTURE DEPENDENT: faster than reload from memory
+    shrl $5, %ecx       # ecx = current thread index to be examined
     movl %ecx, %ebx     # Constant ownId copy
     movl 8(%edx), %ebp  # now feather_thread pointer in ebp
 next_thread_loop:
