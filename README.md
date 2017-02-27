@@ -1,3 +1,5 @@
+[//]: # "Comment: If you edit this document, be sure to reflect the changes in the docblock in feather.h."
+
 # Feather
 
 An x86 (IA-32) user-level threads implementation. Cooperative. FCFS strategy. Thread-safe.
