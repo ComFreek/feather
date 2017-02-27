@@ -1,6 +1,23 @@
 #ifndef FEATHER_H
 #define FEATHER_H
 
+#if !defined(__GNUC__) && !defined(__GNUG__)
+  #error "Feather is only supported with GCC"
+#endif
+
+// To prevent hard-to-find errors, we simply stop compilation if SSE is enabled.
+#if defined(__SSE__) || defined(__SSE2__) || defined(__SSE_MATH__) || defined(__SSE2_MATH__)
+  #error "Feather does not work with SSE as it does not save these registers between context switches. See comments in feather.h"
+#endif
+
+#if defined(__x86_64__) || defined(_M_X64)
+  #error "Feather does not work with x86-64 (IA-64 or other names) as it only saves x86 regsiters between context switches."
+#endif
+
+#if !defined(__i386) && !defined(_M_IX86)
+  #error "Feather does not work on non-x86 architectures."
+#endif
+
 /**
   * An x86 (IA-32) user-level threads implementation. Cooperative. FCFS strategy. Thread-safe.
   *
@@ -14,6 +31,15 @@
   * the usage of malloc/free. Assuming malloc/free are thread-safe, you can safely run user-level threads from
   * _different_ initialized feather* structures from multiple real threads. Note that user-level threads across real
   * threads can also share state and communicate among themselves.
+  *
+  * Compatibility Notes:
+  *
+  *  1) Currently the only supported compiler is GCC:
+  *     It would most likely work on other compilers with minor modifications,
+  *     e.g. __attribute__ ((...)) directives would need to be ported.
+  *  2) Only works on x86 (IA-32, 32-bit)
+  *  3) The user-level threads must not make use of SSE instructions or SSE registers as these are
+  *     not taken into account when context-switching.
   *
   * Trivia: Its name originates from the German word 'Feder' which is sometimes used to refer to user-level-threads
   * ("federgewichtige Threads").
@@ -35,7 +61,7 @@ static const size_t FT_STACK_SIZE = 4096;
 /**
   * Initializes, but not yet runs the threads.
   * Each threads is given its own stack with size FT_STACK_SIZE on the heap, i.e. allocated via malloc.
-  * The stack and all other data structures as referenced by 
+  * The stack and all other data structures as referenced by
   *
   * @return On succes, a non-NULL pointer is returned. On failure, NULL is returned and errno set to indicate the
   *         error.
