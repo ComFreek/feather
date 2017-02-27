@@ -80,8 +80,7 @@ static int16_t consumer(struct feather* feather, size_t own_id) {
 }
 
 int main(__attribute__ ((unused)) int argc, __attribute__ ((unused)) char *argv[]) {
-    ft_func funcs[2] = {producer, consumer};
-    struct feather *f = ft_init(2, funcs);
+    struct feather *f = ft_initv(2, producer, consumer);
     if (!f) {
         perror("ft_init");
         return EXIT_FAILURE;

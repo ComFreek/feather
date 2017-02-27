@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <stdarg.h>
 #include "feather.h"
 
 extern void ft_return_cleanup(void);
@@ -87,6 +88,19 @@ feather *ft_init(size_t count, __attribute__ ((unused)) ft_func *funcs) {
     }
 
     return feather;
+}
+
+feather *ft_initv(size_t count, ...) {
+    va_list list;
+    va_start(list, count);
+
+    ft_func funcs[count];
+    for (size_t i = 0; i < count; i++) {
+        funcs[i] = va_arg(list, ft_func);
+    }
+
+    va_end(list);
+    return ft_init(count, funcs);
 }
 
 void ft_yieldd(struct feather *f, size_t ownId) {

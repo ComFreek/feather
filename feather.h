@@ -43,6 +43,11 @@ static const size_t FT_STACK_SIZE = 4096;
 feather *ft_init(size_t count, ft_func *funcs);
 
 /**
+  * Wrapper function for ft_init which takes the functions as parameters instead of as an array.
+  */
+feather *ft_initv(size_t count, ...);
+
+/**
   * Equivalent to returning from the thread's entry point function except that you can
   * everywhere call this function within the thread (e.g. if a helper function called by the entry point
   * function determines that forceful termination is required).
@@ -53,6 +58,9 @@ __attribute__((noreturn)) void ft_exit(feather *feather, size_t ownId, int16_t e
 
 /**
   * Run all threads and wait for their termination.
+  * This already calls ft_destroy internally, a further call after this function has returned,
+  * is neither necessary nor correct.
+  *
   * If exitcodes is non-NULL, the exit codes are written into this array which must have the same length
   * as 'count' specified the thread count on initialization via ft_init.
   */
