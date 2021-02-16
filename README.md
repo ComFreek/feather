@@ -25,5 +25,6 @@ threads can also share state and communicate among themselves.
     not taken into account when context-switching.
 
 ## Trivia
+
 Its name originates from the German word 'Feder' which is sometimes used to refer to user-level-threads
 ("federgewichtige Threads").
