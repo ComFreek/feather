@@ -4,7 +4,7 @@
 
 An x86 (IA-32) user-level threads implementation. Cooperative. FCFS strategy. Thread-safe.
 
-**archived: this was an old university toy project of mine.**
+**This repository is archived. This is an old toy project of mine, which I did back then as a voluntary exercise to some university course.**
 
 The user-level threads act cooperatively, i.e. every thread must voluntarily give up its runtime by either
 calling ft\_yield, ft\_exit or returning from its entry point (equivalent to calling ft\_exit).
